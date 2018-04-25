@@ -5,7 +5,7 @@ import {getGames, joinGame, updateGame} from '../../actions/games'
 import {getUsers} from '../../actions/users'
 import {userId} from '../../jwt'
 import Paper from 'material-ui/Paper'
-//import Dice from './Dice'?
+import Board from './Board'
 import './GameDetails.css'
 
 class GameDetails extends PureComponent {
@@ -19,19 +19,17 @@ class GameDetails extends PureComponent {
 
   joinGame = () => this.props.joinGame(this.props.game.id)
 
-  // function update game with score!
+  makeMove = (toRow, toCell) => {
+    const {game, updateGame} = this.props
 
-  // makeMove = (toRow, toCell) => {
-  //   const {game, updateGame} = this.props
-
-    //const score = game.score.map(
-  //     (row, rowIndex) => row.map((cell, cellIndex) => {
-  //       if (rowIndex === toRow && cellIndex === toCell) return game.turn
-  //       else return cell
-  //     })
-  //  )
-    //updateGame(game.id, score)
-  //}
+    const board = game.board.map(
+      (row, rowIndex) => row.map((cell, cellIndex) => {
+        if (rowIndex === toRow && cellIndex === toCell) return game.turn
+        else return cell
+      })
+    )
+    updateGame(game.id, board)
+  }
 
 
 
@@ -48,7 +46,7 @@ class GameDetails extends PureComponent {
     const player = game.players.find(p => p.userId === userId)
 
     const winner = game.players
-      .filter(p => p.symbol === game.winner) //symbol is defining player?
+      .filter(p => p.symbol === game.winner)
       .map(p => p.userId)[0]
 
     return (<Paper className="outer-paper">
@@ -76,8 +74,8 @@ class GameDetails extends PureComponent {
       <hr />
 
       {
-        // game.status !== 'pending' &&
-        // <Score score={game.score} makeMove={this.makeMove} /> //dice or board
+        game.status !== 'pending' &&
+        <Board board={game.board} makeMove={this.makeMove} />
       }
     </Paper>)
   }

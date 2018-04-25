@@ -2,12 +2,17 @@ import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, Index, OneToMany, M
 import User from '../users/entity'
 
 export type Symbol = 'x' | 'o'
-export type Score = 0
-const emptyScore: Score = 0
+export type Score = number
+
+export type Row = [ Symbol | null ]
+export type Board =  Row 
+
 
 type Status = 'pending' | 'started' | 'finished'
 
-
+//const emptyScore: Score = 0
+const emptyRow: Row = [null]
+const emptyBoard: Board =  emptyRow 
 
 @Entity()
 export class Game extends BaseEntity {
@@ -15,8 +20,8 @@ export class Game extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column('int', {default: emptyScore})
-  score: number
+  @Column('json', {default: emptyBoard})
+  board: Board
 
   @Column('char', {length:1, default: 'x'})
   turn: Symbol
@@ -46,8 +51,14 @@ export class Player extends BaseEntity {
   @ManyToOne(_ => Game, game => game.players)
   game: Game
 
-   @Column()
-   userId: number
+  @Column()
+  userId: number
+
+  @Column()
+  scorePlayer1: number
+
+  @Column()
+  scorePlayer2: number
 
   @Column('char', {length: 1})
   symbol: Symbol

@@ -3,15 +3,16 @@ import {
    Patch 
 } from 'routing-controllers'
 import User from '../users/entity'
-import { Game, Player } from './entities' //Score
-//import {IsScore, isValidTransition, calculateWinner, finished} from './logic'
+import { Game, Player, Board } from './entities' //Score
+import { calculateWinner, finished} from './logic'
 //import { Validate } from 'class-validator'
 import {io} from '../index'
+import { isValidTransition} from './logic'
 
-//class GameUpdate {
- //score: Score
+ class GameUpdate {
+ board : Board
   
-//}
+ }
 
 @JsonController()
 export default class GameController {
@@ -69,14 +70,11 @@ export default class GameController {
   }
 
   @Authorized()
-  // the reason that we're using patch here is because this request is not idempotent
-  // http://restcookbook.com/HTTP%20Methods/idempotency/
-  // try to fire the same requests twice, see what happens
   @Patch('/games/:id([0-9]+)')
   async updateGame(
     @CurrentUser() user: User,
     @Param('id') gameId: number,
-    //@Body() update: GameUpdate
+    @Body() update: GameUpdate
   ) {
     const game = await Game.findOneById(gameId)
     if (!game) throw new NotFoundError(`Game does not exist`)
@@ -86,30 +84,43 @@ export default class GameController {
     if (!player) throw new ForbiddenError(`You are not part of this game`)
     if (game.status !== 'started') throw new BadRequestError(`The game is not started yet`)
     if (player.symbol !== game.turn) throw new BadRequestError(`It's not your turn`)
+    if (!isValidTransition(player.symbol, game.turn)) {
+      throw new BadRequestError(`Invalid move`)
+    }    
    
 
-  //   const winner = calculateWinner(update.score)
-  //   if (winner) {
-  //     game.winner = winner
-  //     game.status = 'finished'
-  //   }
-  //   else if (finished(update.score)) {
-  //     game.status = 'finished'
-  //   }
-  //   else {
-  //     game.turn = player.symbol === 'x' ? 'o' : 'x'
-  //   }
-  //   game.score = update.score
-  //   await game.save()
-
-  //   console.log('3')
+    const winner = calculateWinner(player.scorePlayer1,player.scorePlayer2)
+    if (winner ) {
+      game.winner = winner
+      game.status = 'finished'
     
-  //   io.emit('action', {
-  //     type: 'UPDATE_GAME',
-  //     payload: game
-  //   })
+    }
 
-  //   return game
+    else if (finished(player.scorePlayer1,player.scorePlayer2)) {
+      game.status = 'finished'
+    }
+    else {
+      if (player.symbol ==='x') {
+        player.scorePlayer1= player.scorePlayer1 +1
+      return game.turn = player.symbol === 'x' ? 'o' : 'x'
+    } 
+else if(player.symbol ==='o') { 
+  player.scorePlayer2 =player.scorePlayer2 +1
+  return game.turn = player.symbol === 'o' ? 'x' : 'o'
+}
+    
+    }
+    game.board = update.board
+    await game.save()
+
+   
+    
+    io.emit('action', {
+      type: 'UPDATE_GAME',
+      payload: game
+    })
+
+    return game
   }
 
   @Authorized()

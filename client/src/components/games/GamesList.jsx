@@ -23,12 +23,12 @@ class GamesList extends PureComponent {
     return (<Card key={game.id} className="game-card">
       <CardContent>
         <Typography color="textSecondary">
-          {/* This game is played by&nbsp;
+          This game is played by&nbsp;
           {
             game.players
               .map(player => users[player.userId].firstName)
               .join(' and ')
-          } */}
+          }
         </Typography>
         <Typography variant="headline" component="h2">
           Game #{game.id}
