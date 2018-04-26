@@ -1,7 +1,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-//import './Dice.css'
+import './Dice.css'
 import { connect } from 'react-redux'
 //import { rollDice } from '../../actions/dice'
 import { updateGame} from '../../actions/games'
@@ -18,6 +18,7 @@ export class Dice extends React.Component {
   handleClick = (gameid,board) => {
       updateGame(gameid,board)
       console.log(gameid,board,"hi")
+      console.log(getRandomNumber(1,7))
       
     
   }
@@ -28,7 +29,7 @@ export class Dice extends React.Component {
       <h3>Roll it!</h3>
       <button
         onClick={this.handleClick}
-        className="Roll-Dice">click
+        className="Roll-Dice">
       </button>
       </div>
     )}}
