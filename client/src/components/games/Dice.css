@@ -1,0 +1,19 @@
+.Dice-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+}
+ 
+ .Roll-Dice {
+    width: 210px;
+    height: 200px;
+    background-image: url("https://hellfiredesigns.files.wordpress.com/2012/09/rollin_d61.gif");
+    display: flex;
+    flex-direction: row;
+    justify-content: center; 
+    margin-top: 5%;
+    margin-bottom: 5%;
+    border: 2px solid #666;
+    border-radius: 15px;
+}

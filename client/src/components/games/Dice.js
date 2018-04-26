@@ -1,7 +1,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-//import './Dice.css'
+import './Dice.css'
 import { connect } from 'react-redux'
 //import { rollDice } from '../../actions/dice'
 import { updateGame} from '../../actions/games'
