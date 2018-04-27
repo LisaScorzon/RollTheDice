@@ -26,6 +26,7 @@ export class Game extends BaseEntity {
   @Column('char', {length:1, default: 'x'})
   turn: Symbol
 
+
   @Column('char', {length:1, nullable: true})
   winner: Symbol
 
@@ -39,7 +40,7 @@ export class Game extends BaseEntity {
 }
 
 @Entity()
-@Index(['game', 'user', 'symbol'], {unique:true})
+@Index(['game', 'user', 'symbol','score'], {unique:false})
 export class Player extends BaseEntity {
 
   @PrimaryGeneratedColumn()
@@ -55,11 +56,30 @@ export class Player extends BaseEntity {
   userId: number
 
   @Column()
-  scorePlayer1: number
-
-  @Column()
-  scorePlayer2: number
+  score: number
 
   @Column('char', {length: 1})
   symbol: Symbol
 }
+
+// @Entity()
+// export class Result extends BaseEntity {
+
+//   @PrimaryGeneratedColumn()
+//   id?: number
+
+//   @ManyToOne(_ => User, user => user.players)
+//   user: User
+
+//   @ManyToOne(_ => Game, game => game.players)
+//   game: Game
+
+//   @Column()
+//   userId: number
+
+//   @Column()
+//   score: number
+
+//   @Column('char', {length: 1})
+//   symbol: Symbol
+// }
