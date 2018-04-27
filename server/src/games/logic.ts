@@ -15,20 +15,16 @@ export const isValidTransition = (playerSymbol,turn ) => {
 
 }
 
-export const calculateWinner = (scorePlayer1, scorePlayer2) => {
-   if (scorePlayer1 >= 18) {
-       return 'x'
-   } else if 
-    (scorePlayer2 >= 18){
-        return 'o'
-    } else {
-        return null
-    }
+export const calculateWinner = (playerSymbol,score) => {
+   if (score >= 18) {
+       return playerSymbol
+   }
 }
 
 
-export const finished = (scorePlayer1, scorePlayer2) =>{
-    if (scorePlayer1 >= 18 || scorePlayer2 >= 18) {
+
+export const finished = (score) =>{
+    if (score >= 18) {
         return true
     } else {
         return false

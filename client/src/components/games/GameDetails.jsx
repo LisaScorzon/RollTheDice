@@ -5,8 +5,9 @@ import {getGames, joinGame, updateGame} from '../../actions/games'
 import {getUsers} from '../../actions/users'
 import {userId} from '../../jwt'
 import Paper from 'material-ui/Paper'
-import {Dice} from './Dice'
+import Dice from './Dice'
 import './GameDetails.css'
+import {updateScore} from '../../actions/updateScore'
 
 class GameDetails extends PureComponent {
 
@@ -21,22 +22,23 @@ class GameDetails extends PureComponent {
 
   // function update game with score!
 
-  // makeMove = (toRow, toCell) => {
-  //   const {game, updateGame} = this.props
 
-    //const score = game.score.map(
-  //     (row, rowIndex) => row.map((cell, cellIndex) => {
-  //       if (rowIndex === toRow && cellIndex === toCell) return game.turn
-  //       else return cell
-  //     })
-  //  )
-    //updateGame(game.id, score)
-  //}
+  makeMove = (toRow, toCell) => {
+    const {game, updateGame, updateScore} = this.props
+
+    const score = game.board.map(
+      (row, rowIndex) => row.map((cell, cellIndex) => {
+        if (rowIndex === toRow && cellIndex === toCell) return game.turn
+        else return cell
+      })
+   )
+    updateGame(game.id , score)
+  }
 
 
 
   render() {
-    const {game, users, authenticated, userId} = this.props
+    const {game, users, authenticated, userId, score} = this.props
 
     if (!authenticated) return (
 			<Redirect to="/login" />
@@ -91,7 +93,7 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = {
-  getGames, getUsers, joinGame, updateGame
+  getGames, getUsers, joinGame, updateGame, updateScore
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameDetails)
